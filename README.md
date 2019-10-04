@@ -1,4 +1,4 @@
-# node-snap7
+# node-snap7-micro-client
 <!---
 [![NPM](https://nodei.co/npm/node-snap7.png?downloads=true)](https://nodei.co/npm/node-snap7/) [![NPM](https://nodei.co/npm-dl/node-snap7.png?months=1)](https://nodei.co/npm/node-snap7/)
 --->
