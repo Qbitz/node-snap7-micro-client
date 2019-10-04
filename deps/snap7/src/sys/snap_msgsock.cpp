@@ -70,7 +70,7 @@ longword Msg_GetSockAddr(socket_t FSocket)
     #ifdef OS_WINDOWS
     int namelen = sizeof(RemoteSin);
     #else
-    uint32_t namelen = sizeof(RemoteSin);
+    socklen_t namelen = sizeof(RemoteSin);
     #endif
     namelen=sizeof(sockaddr_in);
     if (getpeername(FSocket,(struct sockaddr*)&RemoteSin, &namelen)==0)
@@ -104,7 +104,7 @@ TMsgSocket::~TMsgSocket()
 }
 //---------------------------------------------------------------------------
 void TMsgSocket::SetSin(sockaddr_in &sin, char *Address, u_short Port)
-{	
+{
     uint32_t in_addr;
     in_addr=inet_addr(Address);
     memset(&sin, 0, sizeof(sin));
@@ -131,7 +131,7 @@ void TMsgSocket::GetLocal()
     #ifdef OS_WINDOWS
 		int namelen = sizeof(LocalSin);
     #else
-        uint32_t namelen = sizeof(LocalSin);
+        socklen_t namelen = sizeof(LocalSin);
     #endif
     if (getsockname(FSocket, (struct sockaddr*)&LocalSin, &namelen)==0)
         GetSin(LocalSin, LocalAddress, LocalPort);
@@ -142,7 +142,7 @@ void TMsgSocket::GetRemote()
     #ifdef OS_WINDOWS
         int namelen = sizeof(RemoteSin);
     #else
-        uint32_t namelen = sizeof(RemoteSin);
+        socklen_t namelen = sizeof(RemoteSin);
     #endif
 	if (getpeername(FSocket,(struct sockaddr*)&RemoteSin, &namelen)==0)
 		GetSin(RemoteSin, RemoteAddress, RemotePort);
@@ -152,7 +152,7 @@ int TMsgSocket::GetLastSocketError()
 {
 #ifdef OS_WINDOWS
     return WSAGetLastError();
-#else    
+#else
     return errno;
 #endif
 }
@@ -206,7 +206,7 @@ void TMsgSocket::SetSocket(socket_t s)
 void TMsgSocket::DestroySocket()
 {
     if(FSocket != INVALID_SOCKET)
-    {        
+    {
         if (shutdown(FSocket, SD_SEND)==0)
 			Purge();
 	#ifdef OS_WINDOWS
@@ -299,7 +299,7 @@ bool TMsgSocket::CanWrite(int Timeout)
     FD_SET(FSocket, &FDset);
 
     x = select(FSocket + 1, NULL, &FDset, NULL, &TimeV); //<-Ignore this warning in 64bit Visual Studio
-    if (x==(int)SOCKET_ERROR) 
+    if (x==(int)SOCKET_ERROR)
     {
         LastTcpError = GetLastSocketError();
         x=0;
@@ -356,14 +356,14 @@ int TMsgSocket::SckConnect()
 							LastTcpError = GetLastSocketError();
 						}
 						else {
-							// still connecting ... 
+							// still connecting ...
 							FD_ZERO(&rset);
 							FD_SET(FSocket, &rset);
 							wset = rset;
 							tval.tv_sec = PingTimeout / 1000;
 							tval.tv_usec = (PingTimeout % 1000) * 1000;
 
-							n = select(FSocket+1, &rset, &wset, NULL, 
+							n = select(FSocket+1, &rset, &wset, NULL,
 							           (PingTimeout ? &tval : NULL));
 							if (n == 0) {
 								// timeout
@@ -372,7 +372,7 @@ int TMsgSocket::SckConnect()
 							else {
 								if (FD_ISSET(FSocket, &rset) || FD_ISSET(FSocket, &wset)) {
 									err = 0;
-									len = sizeof(err);						
+									len = sizeof(err);
 									if (getsockopt(
 									      FSocket, SOL_SOCKET, SO_ERROR, &err, &len) == 0) {
 										if (err) {
@@ -397,8 +397,8 @@ int TMsgSocket::SckConnect()
 								}
 							}
 						} // still connecting
-					} 
-					else if (n == 0) { 
+					}
+					else if (n == 0) {
 						// connected immediatly
 						GetLocal();
 						ClientHandle = LocalSin.sin_addr.s_addr;
@@ -411,7 +411,7 @@ int TMsgSocket::SckConnect()
 			else {
 				LastTcpError = GetLastSocketError();
 			} // fcntl(F_GETFL)
-		} //valid socket 
+		} //valid socket
 	} // LastTcpError==0
 	Connected=LastTcpError==0;
  	return LastTcpError;
@@ -480,11 +480,11 @@ int TMsgSocket::SckBind()
     {
         CreateSocket();
         if (LastTcpError==0)
-        {		
+        {
             setsockopt(FSocket ,SOL_SOCKET, SO_REUSEADDR, (const char *)&Opt, sizeof(int));
             Res =bind(FSocket, (struct sockaddr*)&LocalSin, sizeof(sockaddr_in));
             SockCheck(Res);
-            if (Res==0) 
+            if (Res==0)
             {
                 LocalBind=LocalSin.sin_addr.s_addr;
             }
@@ -529,7 +529,7 @@ socket_t TMsgSocket::SckAccept()
 int TMsgSocket::SendPacket(void *Data, int Size)
 {
     int Result;
-    
+
     LastTcpError=0;
     if (SendTimeout>0)
     {
@@ -726,14 +726,14 @@ void TRawSocketPinger::InitPacket()
 {
     memset(&IcmpBuffer,0,ICmpBufferSize);
     FSeq++;
-    
+
 	SendPacket=PIcmpPacket(pbyte(&IcmpBuffer)+sizeof(TIPHeader));
     SendPacket->Header.ic_type=ICMP_ECHORQ;
     SendPacket->Header.ic_code=0;
     SendPacket->Header.ic_cksum=0;
     SendPacket->Header.ic_id=FId;
     SendPacket->Header.ic_seq=FSeq;
- 
+
     memset(&SendPacket->Data,0,sizeof(SendPacket->Data));
     SendPacket->Header.ic_cksum=PacketChecksum();
 }

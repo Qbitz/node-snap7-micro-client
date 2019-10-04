@@ -1,12 +1,12 @@
 {
-  "name": "node-snap7",
+  "name": "node-snap7-micro-client",
   "main": "./lib/node-snap7.js",
   "version": "1.0.3",
   "description": "Native node.js addon/wrapper for snap7",
-  "homepage": "https://github.com/mathiask88/node-snap7",
+  "homepage": "https://github.com/Qbitz/node-snap7-micro-client",
   "repository": {
     "type": "git",
-    "url": "git://github.com/mathiask88/node-snap7.git"
+    "url": "git@github.com:Qbitz/node-snap7-micro-client.git"
   },
   "keywords": [
     "snap7",
@@ -15,7 +15,7 @@
     "PLC"
   ],
   "author": {
-    "name": "Mathias Küsel"
+    "name": "Piotr Kubowicz"
   },
   "engines": {
     "node": ">=4"
@@ -23,8 +23,9 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
-    "nan": "~2.14.0",
     "bindings": "~1.5.0",
+    "mkdirp": "^0.5.1",
+    "nan": "~2.14.0",
     "prebuild-install": "^5.0.0"
   },
   "devDependencies": {
