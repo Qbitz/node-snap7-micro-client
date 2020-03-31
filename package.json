@@ -1,7 +1,7 @@
 {
   "name": "node-snap7-micro-client",
   "main": "./lib/node-snap7-micro-client.js",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Native node.js addon/wrapper for snap7",
   "homepage": "https://github.com/Qbitz/node-snap7-micro-client",
   "repository": {
