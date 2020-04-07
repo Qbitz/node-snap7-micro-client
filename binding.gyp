@@ -40,21 +40,12 @@
                     "cflags_cc": ["-fPIC", "-fexceptions"],
                     "cflags_cc!": ["-fno-exceptions"]
                 }],
-                ["OS=='mac'", {
+                ["OS=='mac' or OS=='ios'", {
 
                     "xcode_settings": {
                         "GCC_ENABLE_CPP_EXCEPTIONS": "YES",
                         "GCC_DYNAMIC_NO_PIC": "NO",
                         "OTHER_CFLAGS": ["-pedantic"]
-                    }
-                }],
-                ["OS=='ios'", {
-
-                    "xcode_settings": {
-                        "GCC_ENABLE_CPP_EXCEPTIONS": "YES",
-                        "GCC_DYNAMIC_NO_PIC": "NO",
-                        "OTHER_CFLAGS": ["-pedantic"],
-                        "ARCHS": ["arm64"]
                     }
                 }]
             ]
